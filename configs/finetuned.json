@@ -1,0 +1,22 @@
+{
+  "model": {
+    "id": "gpt2",
+    "model_id": "finetune\\gpt2_wikitext_20260219_002815\\model",
+    "device": "cuda",
+    "max_sequence_length": 512,
+    "batch_size": 8
+  },
+  "dataset": {
+    "id": "saved-split",
+    "data_dir": "finetune\\gpt2_wikitext_20260219_002815\\data_split",
+    "member_file": "members.json",
+    "non_member_file": "non_members.json"
+  },
+  "attack": {
+    "id": "loss-based-mia"
+  },
+  "reporter": {
+    "id": "pdf",
+    "output_dir": "reports/pdf"
+  }
+}

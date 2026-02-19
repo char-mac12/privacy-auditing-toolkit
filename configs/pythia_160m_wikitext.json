@@ -1,0 +1,22 @@
+{
+  "model": {
+    "id": "pythia",
+    "model_id": "EleutherAI/pythia-160m-deduped",
+    "device": "cuda",
+    "max_sequence_length": 512,
+    "batch_size": 8
+  },
+  "dataset": {
+    "id": "wikitext",
+    "subset": "wikitext-2-raw-v1",
+    "max_member_samples": 1,
+    "max_non_member_samples": 1
+  },
+  "attack": {
+    "id": "loss-based-mia"
+  },
+  "reporter": {
+    "id": "pdf",
+    "output_dir": "reports/pdf"
+  }
+}
