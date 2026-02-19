@@ -1,14 +1,16 @@
 from pathlib import Path
 from transformers import GPTNeoXForCausalLM, AutoTokenizer
 
-from models.causal_lm import CausalLMModel
+from models.causal_lm import CausalLmModel
 from core.registries import register, MODEL_REGISTRY
 
 @register(MODEL_REGISTRY, "pythia")
-class PythiaModel(CausalLMModel):
+class PythiaModel(CausalLmModel):
     
     def __init__(self, config=None):
         super().__init__(config)
+
+        self.display_name = "pythia"
         
         model_path = Path(self.name)
         if model_path.exists():

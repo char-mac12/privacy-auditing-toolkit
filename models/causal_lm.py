@@ -1,6 +1,7 @@
 import torch
+from tqdm import tqdm
 
-from base import BaseModel
+from models.base import BaseModel
 
 class CausalLmModel(BaseModel):
     
@@ -18,7 +19,7 @@ class CausalLmModel(BaseModel):
     def loss(self, samples):
         losses = []
 
-        for i in range(0, len(samples), self.batch_size):
+        for i in tqdm(range(0, len(samples), self.batch_size), desc="Calculating loss"):
             batch = samples[i:i + self.batch_size]
 
             inputs = self.tokenizer(batch, return_tensors="pt", padding=True, truncation=True, max_length=self.max_seq_len).to(self.device)
@@ -40,7 +41,7 @@ class CausalLmModel(BaseModel):
                 attention_mask = inputs["attention_mask"][..., 1:].float()
 
                 sample_losses = (token_losses * attention_mask).sum(dim=1) / attention_mask.sum(dim=1)
-                losses.extend(sample_losses.cpu().toList())
+                losses.extend(sample_losses.cpu().tolist())
 
         return losses
         

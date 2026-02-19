@@ -10,11 +10,13 @@ class Gpt2Model(CausalLmModel):
     def __init__(self, config=None):
         super().__init__(config)
 
-        model_path = Path(self.name)
+        self.display_name = "gpt2"
+
+        model_path = Path(self.display_name)
         if model_path.exists():
             model_path = str(model_path.resolve())
         else:
-            model_path = self.name
+            model_path = self.display_name
 
         self.tokenizer = GPT2TokenizerFast.from_pretrained(model_path)
         self.tokenizer.pad_token = self.tokenizer.eos_token

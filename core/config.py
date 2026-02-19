@@ -5,4 +5,4 @@ class LogLevel(Enum):
     INFO = 1
     VERBOSE = 2
 
-LOG_LEVEL = LogLevel.INFO
+LOG_LEVEL = LogLevel.VERBOSE

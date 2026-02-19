@@ -15,6 +15,7 @@ class AttackRunner:
         dataset_cls = DATASET_REGISTRY[self.config.dataset_id]
         dataset = dataset_cls(self.config.dataset_config)
 
+        log(ATTACK_REGISTRY.keys(), LogLevel.INFO)
         attack_cls = ATTACK_REGISTRY[self.config.attack_id]
         attack = attack_cls()
 

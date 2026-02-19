@@ -1,7 +1,7 @@
 from core.registries import register, ATTACK_REGISTRY
-from base import Attack
+from attacks.base import Attack
 from core.logger import log, LogLevel
-from attack_result import AttackResult
+from attacks.attack_result import AttackResult
 
 
 @register(ATTACK_REGISTRY, "loss-based-mia")
@@ -11,19 +11,22 @@ class LossBasedMIA(Attack):
     def run(self, model, dataset):
         log(
             f"[Attack] Running {self.display_name} "
-            f"on model '{model.name}' with dataset '{dataset.name}'",
+            f"on model '{model.display_name}' with dataset '{dataset.display_name}'",
             LogLevel.INFO
         )
 
+        log(f"Calculating member loss for {len(dataset.member_samples())} samples", LogLevel.VERBOSE)
         member_losses = model.loss(dataset.member_samples())
+
+        log(f"Calculating non-member loss for {len(dataset.non_member_samples())} samples", LogLevel.VERBOSE)
         non_member_losses = model.loss(dataset.non_member_samples())
 
         log("[Attack] Loss-based MIA finished", LogLevel.INFO)
 
         return AttackResult(
             attack_name=self.display_name,
-            model_name=model.name,
-            dataset_name=dataset.name,
+            model_name=model.display_name,
+            dataset_name=dataset.display_name,
             attack_outputs={
                 "member_losses": member_losses,
                 "non_member_losses": non_member_losses,

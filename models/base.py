@@ -11,7 +11,3 @@ class BaseModel(ABC):
     @abstractmethod
     def loss(self, samples: List[str]) -> List[float]:
         pass
-
-    @abstractmethod
-    def per_token_loss(self, samples: List[str]) -> List[float]:
-        pass
