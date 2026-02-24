@@ -2,6 +2,7 @@
 reports/pdf/
 finetune/
 marios/
+canary_experiments/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
