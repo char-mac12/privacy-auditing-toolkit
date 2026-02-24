@@ -1,5 +1,6 @@
 from datetime import datetime
 from pathlib import Path
+import math
 
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
@@ -80,10 +81,24 @@ class PdfReporter(BaseReporter):
         canvas.restoreState()
 
     def _summary_table(self, result: AttackResult, timestamp: str):
+        num_member_samples = len(result.attack_outputs.get("member_losses", []))
+        num_non_member_samples = len(result.attack_outputs.get("non_member_losses", []))
+
+        g = math.gcd(num_member_samples, num_non_member_samples)
+
+        simplified_a = num_member_samples // g
+        simplified_b = num_non_member_samples // g
+
+        formatted_ratio = f"{simplified_a}:{simplified_b}"
+
         data = [
             ["Attack", result.attack_name],
             ["Model", result.model_name],
             ["Dataset", result.dataset_name],
+            ["Member samples", str(num_member_samples)],
+            ["Non-member samples", str(num_non_member_samples)],
+            ["Total samples", str(num_member_samples + num_non_member_samples)],
+            ["Member/Non-member ratio", formatted_ratio],
             ["Report Creation", timestamp]
         ]
         
