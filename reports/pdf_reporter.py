@@ -11,7 +11,7 @@ from reportlab.lib import colors
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import roc_curve, auc, ConfusionMatrixDisplay
 
 from attacks.attack_result import AttackResult
 from core.registries import register, REPORTER_REGISTRY
@@ -63,6 +63,12 @@ class PdfReporter(BaseReporter):
             story.append(Paragraph("Loss Distribution", styles["Heading2"]))
             story.append(Spacer(1, 0.1*inch))
             story.append(Image(str(loss_path), width=5*inch, height=4*inch))
+
+        cm_path = self._confusion_matrix_plot(result)
+        if cm_path:
+            story.append(Paragraph("Confusion Matrix", styles["Heading2"]))
+            story.append(Spacer(1, 0.1*inch))
+            story.append(Image(str(cm_path), width=5*inch, height=4*inch))
 
         doc.build(story, onFirstPage=self._first_page, onLaterPages=self._later_pages)
 
@@ -192,6 +198,36 @@ class PdfReporter(BaseReporter):
         plt.grid(alpha=0.3)
 
         plot_path = self.output_dir / f"loss_dist_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
+        plt.savefig(plot_path, dpi=150, bbox_inches="tight")
+        plt.close()
+
+        return plot_path
+    
+    def _confusion_matrix_plot(self, result: AttackResult):
+        attack_outputs = result.attack_outputs or {}
+        member_losses = attack_outputs.get("member_losses")
+        non_member_losses = attack_outputs.get("non_member_losses")
+        threshold = result.metrics.get("threshold")
+
+        if not member_losses or not non_member_losses or threshold is None:
+            return None
+
+        y_true = [1] * len(member_losses) + [0] * len(non_member_losses)
+        y_scores = [-l for l in member_losses + non_member_losses]
+        y_pred = [1 if s >= threshold else 0 for s in y_scores]
+
+        ConfusionMatrixDisplay.from_predictions(
+            y_true,
+            y_pred,
+            display_labels=["Non-Member", "Member"],
+            cmap="Blues",
+            values_format="d"
+        )
+
+        plt.title("Confusion Matrix")
+        plt.grid(False)
+
+        plot_path = self.output_dir / f"cm_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
         plt.savefig(plot_path, dpi=150, bbox_inches="tight")
         plt.close()
 
