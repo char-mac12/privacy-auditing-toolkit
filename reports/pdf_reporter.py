@@ -16,6 +16,7 @@ from sklearn.metrics import roc_curve, auc, ConfusionMatrixDisplay
 from attacks.attack_result import AttackResult
 from core.registries import register, REPORTER_REGISTRY
 from core.logger import log, LogLevel
+from core.run_config import RunConfig
 from reports.base import BaseReporter
 
 styles = getSampleStyleSheet()
@@ -30,7 +31,7 @@ class PdfReporter(BaseReporter):
         self.output_dir.mkdir(parents=True, exist_ok=True)
         log(f"[Reporter] PDFReporter initialized, saving to {self.output_dir}", LogLevel.VERBOSE)
 
-    def report(self, result: AttackResult):
+    def report(self, result: AttackResult, run_config=None):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         display_time = datetime.strptime(timestamp, "%Y%m%d_%H%M%S").strftime("%Y-%m-%d %H:%M:%S")
         filepath = self.output_dir / f"Privacy_Audit_Report_{timestamp}.pdf"
@@ -40,10 +41,25 @@ class PdfReporter(BaseReporter):
 
         story.append(Spacer(1, 0.5*inch))
 
-        # Attack Details
-        story.append(Paragraph("Attack Details", styles["Heading2"]))
+        # Audit Summary
+        story.append(Paragraph("Audit Summary", styles["Heading2"]))
         story.append(Spacer(1, 0.1*inch))
         story.append(self._summary_table(result, display_time))
+        story.append(Spacer(1, 0.3*inch))
+
+        # Attack Details
+
+        # Model Details
+        if run_config:
+            story.append(Paragraph("Model Details", styles["Heading2"]))
+            story.append(Spacer(1, 0.1*inch))
+            story.append(self._model_config_table(result, run_config))
+            story.append(Spacer(1, 0.3*inch))
+
+        # Dataset Details
+        story.append(Paragraph("Dataset Details", styles["Heading2"]))
+        story.append(Spacer(1, 0.1*inch))
+        story.append(self._dataset_table(result))
         story.append(Spacer(1, 0.3*inch))
 
         # Metrics
@@ -87,6 +103,51 @@ class PdfReporter(BaseReporter):
         canvas.restoreState()
 
     def _summary_table(self, result: AttackResult, timestamp: str):
+        data = [
+            ["Attack", result.attack_name],
+            ["Model", result.model_name],
+            ["Dataset", result.dataset_name],
+            ["Report Creation", timestamp]
+        ]
+        
+        table = Table(data, colWidths=[2*inch, 4*inch])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ]))
+        return table
+    
+    def _model_config_table(self, result: AttackResult, run_config: RunConfig):
+        model_config = run_config.model_config
+        
+        data = []
+        
+        # Add relevant config items
+        if "model_id" in model_config:
+            data.append(["Model ID", model_config["model_id"]])
+        # if "device" in model_config:
+        #     data.append(["Device", model_config["device"]])
+        if "max_sequence_length" in model_config:
+            data.append(["Max Sequence Length", str(model_config["max_sequence_length"])])
+        if "batch_size" in model_config:
+            data.append(["Batch Size", str(model_config["batch_size"])])
+
+        table = Table(data, colWidths=[2*inch, 4*inch])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ]))
+        return table
+
+    def _dataset_table(self, result: AttackResult):
         num_member_samples = len(result.attack_outputs.get("member_losses", []))
         num_non_member_samples = len(result.attack_outputs.get("non_member_losses", []))
 
@@ -98,16 +159,13 @@ class PdfReporter(BaseReporter):
         formatted_ratio = f"{simplified_a}:{simplified_b}"
 
         data = [
-            ["Attack", result.attack_name],
-            ["Model", result.model_name],
             ["Dataset", result.dataset_name],
             ["Member samples", str(num_member_samples)],
             ["Non-member samples", str(num_non_member_samples)],
             ["Total samples", str(num_member_samples + num_non_member_samples)],
-            ["Member/Non-member ratio", formatted_ratio],
-            ["Report Creation", timestamp]
+            ["Member/Non-member ratio", formatted_ratio]
         ]
-        
+
         table = Table(data, colWidths=[2*inch, 4*inch])
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),

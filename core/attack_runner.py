@@ -28,6 +28,6 @@ class AttackRunner:
 
         reporter_cls = REPORTER_REGISTRY[self.config.reporter_id]
         reporter = reporter_cls(self.config.reporter_config)
-        reporter.report(result)
+        reporter.report(result, self.config)
 
         log("[Runner] Run complete", LogLevel.INFO)
