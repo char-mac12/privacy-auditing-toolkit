@@ -1,14 +1,22 @@
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, roc_curve
 from core.registries import register, METRICS_REGISTRY
+from metrics.base import BaseMetrics
+import numpy as np
 
 
 def _compute_mia_metrics(member_values, non_member_values, higher_is_member=False):
+    member_values = [v for v in member_values if np.isfinite(v)]
+    non_member_values = [v for v in non_member_values if np.isfinite(v)]
+    
+    if len(member_values) == 0 or len(non_member_values) == 0:
+        raise ValueError("No valid scores available to compute metrics")
+
     y_true = [1] * len(member_values) + [0] * len(non_member_values)
     
     if higher_is_member:
         y_scores = member_values + non_member_values
     else:
-        y_scores = [-v for v in member_values + non_member_values]
+        y_scores = [-value for value in member_values + non_member_values]
     
     fpr, tpr, thresholds = roc_curve(y_true, y_scores)
     best_threshold_index = (tpr - fpr).argmax()
@@ -40,24 +48,13 @@ def _compute_mia_metrics(member_values, non_member_values, higher_is_member=Fals
         "tpr_at_1%_fpr": tpr_at_1_percent_fpr
     }
 
-
 @register(METRICS_REGISTRY, "loss-based-mia")
-class LossBasedMiaMetrics:    
-
-    def compute(self, attack_output):
-        return _compute_mia_metrics(
-            attack_output["member_losses"],
-            attack_output["non_member_losses"],
-            higher_is_member=False  # Lower loss = more likely member
-        )
-
-
 @register(METRICS_REGISTRY, "min-k-mia")
-class MinKProbabilityMetrics:
-    
+@register(METRICS_REGISTRY, "range-mia")
+class MIAMetrics(BaseMetrics):    
     def compute(self, attack_output):
         return _compute_mia_metrics(
             attack_output["member_scores"],
             attack_output["non_member_scores"],
-            higher_is_member=True  # Higher Min-K% score = more likely member
+            attack_output["higher_is_member"]
         )

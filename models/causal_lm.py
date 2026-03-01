@@ -81,13 +81,10 @@ class CausalLmModel(BaseModel):
                 token_losses = token_losses.view(len(batch), -1)
                 attention_mask = inputs["attention_mask"][..., 1:].float()
                 
-                # Extract per-token losses for each sample (excluding padding)
                 for j in range(len(batch)):
-                    # Get losses for this sample, masking out padding
                     sample_token_losses = token_losses[j]
                     sample_mask = attention_mask[j]
                     
-                    # Only keep non-padding tokens
                     valid_losses = sample_token_losses[sample_mask == 1].cpu().tolist()
                     per_token_losses_list.append(valid_losses)
         

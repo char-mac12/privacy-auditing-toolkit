@@ -1,6 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 import math
+import numpy as np
 
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
@@ -80,11 +81,12 @@ class PdfReporter(BaseReporter):
             story.append(Spacer(1, 0.1*inch))
             story.append(Image(str(loss_path), width=5*inch, height=4*inch))
 
-        cm_path = self._confusion_matrix_plot(result)
-        if cm_path:
-            story.append(Paragraph("Confusion Matrix", styles["Heading2"]))
-            story.append(Spacer(1, 0.1*inch))
-            story.append(Image(str(cm_path), width=5*inch, height=4*inch))
+        if result.attack_name != "Range MIA":
+            cm_path = self._confusion_matrix_plot(result)
+            if cm_path:
+                story.append(Paragraph("Confusion Matrix", styles["Heading2"]))
+                story.append(Spacer(1, 0.1*inch))
+                story.append(Image(str(cm_path), width=5*inch, height=4*inch))
 
         doc.build(story, onFirstPage=self._first_page, onLaterPages=self._later_pages)
 
@@ -203,14 +205,22 @@ class PdfReporter(BaseReporter):
     
     def _roc_curve(self, result: AttackResult):
         attack_outputs = result.attack_outputs or {}
-        member_losses = attack_outputs.get("member_losses")
-        non_member_losses = attack_outputs.get("non_member_losses")
+        member_scores = attack_outputs.get("member_scores")
+        non_member_scores = attack_outputs.get("non_member_scores")
+        higher_is_member = attack_outputs.get("higher_is_member")
+
+        member_scores = [v for v in member_scores if np.isfinite(v)]
+        non_member_scores = [v for v in non_member_scores if np.isfinite(v)]
+    
+        if len(member_scores) == 0 or len(non_member_scores) == 0:
+            raise ValueError("No valid scores available to compute metrics")
         
-        if not member_losses or not non_member_losses:
-            return None
-        
-        y_true = [1] * len(member_losses) + [0] * len(non_member_losses)
-        y_scores = [-l for l in member_losses + non_member_losses]
+        y_true = [1] * len(member_scores) + [0] * len(non_member_scores)
+
+        if higher_is_member:
+            y_scores = (member_scores + non_member_scores)
+        else:
+            y_scores = [-score for score in member_scores + non_member_scores]
         
         fpr, tpr, _ = roc_curve(y_true, y_scores)
         roc_auc = auc(fpr, tpr)
