@@ -148,8 +148,13 @@ class PdfReporter(BaseReporter):
         return table
 
     def _dataset_table(self, result: AttackResult):
-        num_member_samples = len(result.attack_outputs.get("member_losses", []))
-        num_non_member_samples = len(result.attack_outputs.get("non_member_losses", []))
+        member_losses = result.attack_outputs.get("member_losses", [])
+        member_scores = result.attack_outputs.get("member_scores", [])
+        num_member_samples = len(member_losses) if member_losses else len(member_scores)
+        
+        non_member_losses = result.attack_outputs.get("non_member_losses", [])
+        non_member_scores = result.attack_outputs.get("non_member_scores", [])
+        num_non_member_samples = len(non_member_losses) if non_member_losses else len(non_member_scores)
 
         g = math.gcd(num_member_samples, num_non_member_samples)
 

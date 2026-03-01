@@ -17,7 +17,8 @@ class AttackRunner:
 
         log(ATTACK_REGISTRY.keys(), LogLevel.INFO)
         attack_cls = ATTACK_REGISTRY[self.config.attack_id]
-        attack = attack_cls()
+        attack_config = self.config.attack_config
+        attack = attack_cls(attack_config)
 
         result = attack.run(model, dataset)
 

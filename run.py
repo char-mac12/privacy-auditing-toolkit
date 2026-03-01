@@ -11,6 +11,7 @@ import metrics
 import reports
 
 import attacks.loss_based_mia    # this was required but shouldn't be
+import attacks.min_k_mia         # this was required but shouldn't be
 
 
 def main():

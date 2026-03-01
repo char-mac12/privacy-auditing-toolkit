@@ -1,0 +1,23 @@
+{
+  "model": {
+    "id": "gpt2",
+    "model_id": "canary_experiments/trained_model",
+    "device": "cuda",
+    "max_sequence_length": 256,
+    "batch_size": 8
+  },
+  "dataset": {
+    "id": "saved-split",
+    "data_dir": "canary_experiments/training_data",
+    "member_file": "members.json",
+    "non_member_file": "non_members.json"
+  },
+  "attack": {
+    "id": "min-k-mia",
+    "k_percent": 25
+  },
+  "reporter": {
+    "id": "pdf",
+    "output_dir": "reports/pdf"
+  }
+}
