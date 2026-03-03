@@ -18,7 +18,6 @@ class JsonReporter(BaseReporter):
 
     def report(self, result: AttackResult, run_config=None):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        display_time = datetime.strptime(timestamp, "%Y%m%d_%H%M%S").strftime("%Y-%m-%d %H:%M:%S")
         filepath = self.output_dir / f"Privacy_Audit_Report_{timestamp}.json"
 
         report_data = {
