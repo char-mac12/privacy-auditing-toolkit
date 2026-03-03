@@ -35,11 +35,11 @@ class Attack(ABC):
             attack_name=self.display_name,
             model_name=model.display_name,
             dataset_name=dataset.display_name,
+            attack_duration=attack_duration
             attack_outputs={
                 "member_scores": member_scores,
                 "non_member_scores": non_member_scores,
-                "higher_is_member": self.higher_is_member,
-                "attack_duration": attack_duration
+                "higher_is_member": self.higher_is_member
             },
             summary=(
                 f"{self.display_name} completed on "

@@ -25,6 +25,7 @@ class JsonReporter(BaseReporter):
             "attack_name": result.attack_name,
             "model_name": result.model_name,
             "dataset_name": result.dataset_name,
+            "attack_duration": result.attack_duration,
             "run_config": run_config,
             "metrics": result.metrics,
             "attack_outputs": result.attack_outputs

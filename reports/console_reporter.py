@@ -23,7 +23,7 @@ class PdfReporter(BaseReporter):
         print(f"Attack: {result.attack_name}")
         print(f"Model: {result.model_name}")
         print(f"Dataset: {result.dataset_name}")
-        print(f"Attack duration: {result.attack_outputs.get("attack_duration")}")
+        print(f"Attack duration: {result.attack_duration}")
         print("---------------------------------------------------------------")
         for metric, value in result.metrics.items():
             metric_display_name = metric.replace("_", " ").title()

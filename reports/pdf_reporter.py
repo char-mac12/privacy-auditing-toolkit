@@ -110,7 +110,7 @@ class PdfReporter(BaseReporter):
             ["Model", result.model_name],
             ["Dataset", result.dataset_name],
             ["Report Creation", timestamp],
-            ["Attack Duration", result.attack_outputs.get("attack_duration")]
+            ["Attack Duration", result.attack_duration]
         ]
         
         table = Table(data, colWidths=[2*inch, 4*inch])
