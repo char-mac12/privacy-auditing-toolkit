@@ -35,7 +35,7 @@ class Attack(ABC):
             attack_name=self.display_name,
             model_name=model.display_name,
             dataset_name=dataset.display_name,
-            attack_duration=attack_duration
+            attack_duration=attack_duration,
             attack_outputs={
                 "member_scores": member_scores,
                 "non_member_scores": non_member_scores,
