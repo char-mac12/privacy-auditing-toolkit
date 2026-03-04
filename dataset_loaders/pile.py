@@ -9,7 +9,7 @@ class PileDataset(BaseDataset):
     def __init__(self, config):
         self.display_name = "The Pile"
 
-        self.dataset = load_from_disk(config.dataset_path)
+        self.dataset = load_from_disk(config.get("dataset_path"))
 
         print(self.dataset)
 
