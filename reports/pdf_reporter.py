@@ -49,6 +49,11 @@ class PdfReporter(BaseReporter):
         story.append(Spacer(1, 0.3*inch))
 
         # Attack Details
+        if run_config:
+            story.append(Paragraph("Attack Details", styles["Heading2"]))
+            story.append(Spacer(1, 0.1*inch))
+            story.append(self._attack_config_table(run_config))
+            story.append(Spacer(1, 0.3*inch))
 
         # Model Details
         if run_config:
@@ -113,6 +118,22 @@ class PdfReporter(BaseReporter):
             ["Attack Duration", result.attack_duration]
         ]
         
+        table = Table(data, colWidths=[2*inch, 4*inch])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+        ]))
+        return table
+    
+    def _attack_config_table(self, run_config: RunConfig):
+        attack_config = run_config.attack_config
+
+        data = [[item, attack_config[item]] for item in attack_config]
+
         table = Table(data, colWidths=[2*inch, 4*inch])
         table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (0, -1), colors.lightgrey),
