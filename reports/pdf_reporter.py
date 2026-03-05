@@ -59,7 +59,7 @@ class PdfReporter(BaseReporter):
         if run_config:
             story.append(Paragraph("Model Details", styles["Heading2"]))
             story.append(Spacer(1, 0.1*inch))
-            story.append(self._model_config_table(result, run_config))
+            story.append(self._model_config_table(run_config))
             story.append(Spacer(1, 0.3*inch))
 
         # Dataset Details
@@ -127,8 +127,9 @@ class PdfReporter(BaseReporter):
             ('TOPPADDING', (0, 0), (-1, -1), 8),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
         ]))
+
         return table
-    
+
     def _attack_config_table(self, run_config: RunConfig):
         attack_config = run_config.attack_config
 
@@ -143,22 +144,13 @@ class PdfReporter(BaseReporter):
             ('TOPPADDING', (0, 0), (-1, -1), 8),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
         ]))
+
         return table
     
-    def _model_config_table(self, result: AttackResult, run_config: RunConfig):
+    def _model_config_table(self, run_config: RunConfig):
         model_config = run_config.model_config
-        
-        data = []
-        
-        # Add relevant config items
-        if "model_id" in model_config:
-            data.append(["Model ID", model_config["model_id"]])
-        # if "device" in model_config:
-        #     data.append(["Device", model_config["device"]])
-        if "max_sequence_length" in model_config:
-            data.append(["Max Sequence Length", str(model_config["max_sequence_length"])])
-        if "batch_size" in model_config:
-            data.append(["Batch Size", str(model_config["batch_size"])])
+
+        data = [[item, model_config[item]] for item in model_config]
 
         table = Table(data, colWidths=[2*inch, 4*inch])
         table.setStyle(TableStyle([
@@ -169,6 +161,7 @@ class PdfReporter(BaseReporter):
             ('TOPPADDING', (0, 0), (-1, -1), 8),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
         ]))
+
         return table
 
     def _dataset_table(self, result: AttackResult):
@@ -263,12 +256,12 @@ class PdfReporter(BaseReporter):
         return plot_path
     
     def _loss_distribution(self, result: AttackResult):
-        attack_outputs = result.attack_outputs or {}
-        member_losses = attack_outputs.get("member_losses")
-        non_member_losses = attack_outputs.get("non_member_losses")
-        
-        if not member_losses or not non_member_losses:
+        if result.attack_name != "Loss-based Membership Inference Attack":
             return None
+        
+        attack_outputs = result.attack_outputs or {}
+        member_losses = attack_outputs.get("member_scores")
+        non_member_losses = attack_outputs.get("non_member_scores")
         
         plt.figure(figsize=(6, 5))
         plt.hist(
@@ -300,15 +293,15 @@ class PdfReporter(BaseReporter):
     
     def _confusion_matrix_plot(self, result: AttackResult):
         attack_outputs = result.attack_outputs or {}
-        member_losses = attack_outputs.get("member_losses")
-        non_member_losses = attack_outputs.get("non_member_losses")
+        member_scores = attack_outputs.get("member_scores")
+        non_member_scores = attack_outputs.get("non_member_scores")
         threshold = result.metrics.get("threshold")
 
-        if not member_losses or not non_member_losses or threshold is None:
+        if not member_scores or not non_member_scores or threshold is None:
             return None
 
-        y_true = [1] * len(member_losses) + [0] * len(non_member_losses)
-        y_scores = [-l for l in member_losses + non_member_losses]
+        y_true = [1] * len(member_scores) + [0] * len(non_member_scores)
+        y_scores = [-l for l in member_scores + non_member_scores]
         y_pred = [1 if s >= threshold else 0 for s in y_scores]
 
         ConfusionMatrixDisplay.from_predictions(
