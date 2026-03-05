@@ -1,13 +1,15 @@
 from core.registries import register, ATTACK_REGISTRY
-from attacks.base import Attack
+from attacks.base import BaseAttack
 from core.logger import log, LogLevel
-from attacks.attack_result import AttackResult
-
 
 @register(ATTACK_REGISTRY, "loss-based-mia")
-class LossBasedMIA(Attack):
+class LossBasedMIA(BaseAttack):
     display_name = "Loss-based Membership Inference Attack"
     higher_is_member = False
+
+    def __init__(self, config=None):
+        cfg = config or {}
+        log(f"[Attack] Initialising {self.display_name}", LogLevel.VERBOSE)
 
     def score(self, model, samples):
         return model.loss(samples)

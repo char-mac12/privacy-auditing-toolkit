@@ -1,18 +1,18 @@
 import numpy as np
-from core.registries import register, ATTACK_REGISTRY
-from attacks.base import Attack
-from core.logger import log, LogLevel
-from attacks.attack_result import AttackResult
 
+from core.registries import register, ATTACK_REGISTRY
+from attacks.base import BaseAttack
+from core.logger import log, LogLevel
 
 @register(ATTACK_REGISTRY, "min-k-mia")
-class MinKProbabilityMIA(Attack):
+class MinKProbabilityMIA(BaseAttack):
     display_name = "Min-K% Probability MIA"
     higher_is_member = True
     
     def __init__(self, config=None):
         cfg = config or {}
         self.k_percent = cfg.get("k_percent", 20)
+        log(f"Initialising {self.display_name}", LogLevel.VERBOSE)
     
     def score(self, model, samples):
         scores = []

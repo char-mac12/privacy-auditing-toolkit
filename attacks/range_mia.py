@@ -1,17 +1,19 @@
 import numpy as np
+
 from core.registries import register, ATTACK_REGISTRY
-from attacks.base import Attack
+from attacks.base import BaseAttack
 from core.logger import log, LogLevel
-from attacks.attack_result import AttackResult
 from attacks.range_sampler import RangeSampler
 
 @register(ATTACK_REGISTRY, "range-mia")
-class RangeMIA(Attack):
+class RangeMIA(BaseAttack):
     display_name = "Range MIA"
     paraphrase_methods = ["word_replace", "prefix"]
 
     def __init__(self, config=None):
         cfg = config or {}
+        log(f"")
+
         self.base_attack_id = cfg.get("base_attack", "loss-based-mia")
         self.sample_size = cfg.get("sample_size", 10)
         self.paraphrase_method = cfg.get("paraphrase_method", "word_replace")

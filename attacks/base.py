@@ -5,7 +5,7 @@ from typing import List, Any
 from attacks.attack_result import AttackResult
 from datetime import datetime
 
-class Attack(ABC):
+class BaseAttack(ABC):
     display_name: str
     higher_is_member: bool    # if true, higher scores mean the attack should predict member, if false, lower scores = member
 
