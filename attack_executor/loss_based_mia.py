@@ -4,7 +4,7 @@ from core.logger import log, LogLevel
 
 @register(ATTACK_REGISTRY, "loss-based-mia")
 class LossBasedMIA(BaseAttack):
-    display_name = "Loss-based Membership Inference Attack"
+    display_name = "Loss-based MIA"
     higher_is_member = False
 
     def __init__(self, config=None):

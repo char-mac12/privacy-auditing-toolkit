@@ -2,17 +2,17 @@ import argparse
 from pathlib import Path
 
 from core.config_loader import ConfigLoader
-from core.attack_runner import AttackRunner
+from core.audit_runner import AuditRunner
 
 import models
 import dataset_loaders
-import attacks
-import metrics
-import reports
+import attack_executor
+import metrics_calculator
+import report_generator
 
-import attacks.loss_based_mia    # this was required but shouldn't be
-import attacks.min_k_mia         # this was required but shouldn't be
-import attacks.range_mia
+import attack_executor.loss_based_mia    # this was required but shouldn't be
+import attack_executor.min_k_mia         # this was required but shouldn't be
+import attack_executor.range_mia
 
 
 def main():
@@ -26,7 +26,7 @@ def main():
     args = parser.parse_args()
     
     config = ConfigLoader.load(args.config)
-    AttackRunner(config).run()
+    AuditRunner(config).run()
 
 
 if __name__ == "__main__":

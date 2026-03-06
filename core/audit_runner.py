@@ -2,7 +2,7 @@ from core.run_config import RunConfig
 from core.logger import log, LogLevel
 from core.registries import MODEL_REGISTRY, DATASET_REGISTRY, ATTACK_REGISTRY, METRICS_REGISTRY, REPORTER_REGISTRY
 
-class AttackRunner:
+class AuditRunner:
     def __init__(self, config: RunConfig):
         self.config = config
 
