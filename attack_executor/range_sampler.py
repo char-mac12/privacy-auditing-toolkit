@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from transformers import AutoTokenizer, AutoModelForMaskedLM
-from attacks.range_samplers import sample_word_replace  # Import the function
+from attack_executor.range_samplers import sample_word_replace  # Import the function
 
 
 class RangeSampler:

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from attacks.attack_result import AttackResult
+from attack_executor.attack_result import AttackResult
 from core.run_config import RunConfig
 
 class BaseReporter(ABC):

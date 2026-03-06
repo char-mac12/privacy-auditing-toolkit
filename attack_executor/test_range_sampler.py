@@ -1,7 +1,7 @@
 import sys
 sys.path.append('.')
 
-from attacks.range_sampler import RangeSampler
+from attack_executor.range_sampler import RangeSampler
 
 # Test configuration
 config = {

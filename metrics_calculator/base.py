@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from attacks.attack_result import AttackResult
+from attack_executor.attack_result import AttackResult
 
 class BaseMetrics(ABC):
 

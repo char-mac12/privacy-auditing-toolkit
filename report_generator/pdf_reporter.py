@@ -14,11 +14,11 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc, ConfusionMatrixDisplay
 
-from attacks.attack_result import AttackResult
+from attack_executor.attack_result import AttackResult
 from core.registries import register, REPORTER_REGISTRY
 from core.logger import log, LogLevel
 from core.run_config import RunConfig
-from reports.base import BaseReporter
+from report_generator.base import BaseReporter
 
 styles = getSampleStyleSheet()
 

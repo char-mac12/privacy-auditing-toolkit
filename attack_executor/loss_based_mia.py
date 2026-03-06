@@ -1,5 +1,5 @@
 from core.registries import register, ATTACK_REGISTRY
-from attacks.base import BaseAttack
+from attack_executor.base import BaseAttack
 from core.logger import log, LogLevel
 
 @register(ATTACK_REGISTRY, "loss-based-mia")

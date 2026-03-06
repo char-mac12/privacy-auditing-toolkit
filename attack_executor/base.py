@@ -2,7 +2,7 @@ from core.logger import log, LogLevel
 from abc import ABC, abstractmethod
 from typing import List, Any
 
-from attacks.attack_result import AttackResult
+from attack_executor.attack_result import AttackResult
 from datetime import datetime
 
 class BaseAttack(ABC):

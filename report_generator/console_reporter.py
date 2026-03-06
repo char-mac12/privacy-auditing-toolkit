@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from attacks.attack_result import AttackResult
+from attack_executor.attack_result import AttackResult
 from core.config import LogLevel
 from core.logger import log
 from core.registries import REPORTER_REGISTRY, register
-from reports.base import BaseReporter
+from report_generator.base import BaseReporter
 
 
 @register(REPORTER_REGISTRY, "console")

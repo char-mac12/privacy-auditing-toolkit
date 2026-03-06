@@ -1,9 +1,9 @@
 import numpy as np
 
 from core.registries import register, ATTACK_REGISTRY
-from attacks.base import BaseAttack
+from attack_executor.base import BaseAttack
 from core.logger import log, LogLevel
-from attacks.range_sampler import RangeSampler
+from attack_executor.range_sampler import RangeSampler
 
 @register(ATTACK_REGISTRY, "range-mia")
 class RangeMIA(BaseAttack):

@@ -2,6 +2,9 @@
 reports/pdf 
 reports/json
 reports/csv
+report_generator/pdf
+report_generator/json
+report_generator/csv
 finetune/
 marios/
 canary_experiments/

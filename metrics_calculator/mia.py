@@ -1,6 +1,6 @@
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, roc_curve
 from core.registries import register, METRICS_REGISTRY
-from metrics.base import BaseMetrics
+from metrics_calculator.base import BaseMetrics
 import numpy as np
 
 
