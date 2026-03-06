@@ -249,7 +249,7 @@ class PdfReporter(BaseReporter):
         plt.legend()
         plt.grid(alpha=0.3)
         
-        plot_path = self.output_dir / f"roc_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        plot_path = self.output_dir / f"roc_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
         plt.savefig(plot_path, dpi=150, bbox_inches='tight')
         plt.close()
         
@@ -285,7 +285,7 @@ class PdfReporter(BaseReporter):
         plt.legend()
         plt.grid(alpha=0.3)
 
-        plot_path = self.output_dir / f"loss_dist_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        plot_path = self.output_dir / f"loss_dist_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
         plt.savefig(plot_path, dpi=150, bbox_inches="tight")
         plt.close()
 
@@ -315,7 +315,7 @@ class PdfReporter(BaseReporter):
         plt.title("Confusion Matrix")
         plt.grid(False)
 
-        plot_path = self.output_dir / f"cm_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        plot_path = self.output_dir / f"cm_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
         plt.savefig(plot_path, dpi=150, bbox_inches="tight")
         plt.close()
 
