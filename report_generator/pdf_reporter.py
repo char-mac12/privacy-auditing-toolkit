@@ -301,8 +301,14 @@ class PdfReporter(BaseReporter):
             return None
 
         y_true = [1] * len(member_scores) + [0] * len(non_member_scores)
-        y_scores = [-l for l in member_scores + non_member_scores]
-        y_pred = [1 if s >= threshold else 0 for s in y_scores]
+        higher_is_member = attack_outputs.get("higher_is_member", True)
+
+        if higher_is_member:
+            y_scores = member_scores + non_member_scores
+        else:
+            y_scores = [-s for s in member_scores + non_member_scores]
+
+        y_pred = [1 if score > threshold else 0 for score in y_scores]
 
         ConfusionMatrixDisplay.from_predictions(
             y_true,
