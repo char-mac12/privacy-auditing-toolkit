@@ -1,0 +1,29 @@
+{
+  "model": {
+    "id": "pythia",
+    "model_id": "EleutherAI/pythia-6.9b",
+    "device": "cuda",
+    "max_sequence_length": 512,
+    "batch_size": 16
+  },
+  "dataset": {
+    "id": "pile",
+    "dataset_path": "",
+    "max_member_samples": 1000,
+    "max_non_member_samples": 1000,
+    "min_text_length": 100
+  },
+  "attack": {
+    "id": "range-mia",
+    "base_attack": "loss-based-mia",
+    "sample_size": 3,
+    "paraphrase_method": "word_replace",
+    "num_masks": 1,
+    "mask_model": "bert-base-uncased",
+    "device": "cuda"
+  },
+  "reporter": {
+    "id": "pdf",
+    "output_dir": "reports/pdf"
+  }
+}
