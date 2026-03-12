@@ -21,6 +21,7 @@ class RangeMIA(BaseAttack):
         # neighbourhood sample config
         self.num_masks = cfg.get("num_masks", 1)
         self.mask_model = cfg.get("mask_model", "bert-base-uncased")
+        self.top_k = cfg.get("top_k", 6)
         device_config = cfg.get("device", "cuda")
         self.device = torch.device(device_config if torch.cuda.is_available() else "cpu")
 
@@ -60,6 +61,7 @@ class RangeMIA(BaseAttack):
                 self.mlm_tokenizer, 
                 self.num_masks, 
                 self.sample_size, 
+                self.top_k,
                 self.device
             )
     

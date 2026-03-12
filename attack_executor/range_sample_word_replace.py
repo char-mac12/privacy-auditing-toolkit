@@ -1,7 +1,7 @@
 import random
 import torch
 
-def sample_word_replace(range_center, mlm_model, mlm_tokenizer, num_masks, sample_size, device):
+def sample_word_replace(range_center, mlm_model, mlm_tokenizer, num_masks, sample_size, top_k, device):
     """
     Sample sentences with word replacements using a masked language model.
 
@@ -15,6 +15,7 @@ def sample_word_replace(range_center, mlm_model, mlm_tokenizer, num_masks, sampl
             `AutoTokenizer` or any subclass of it.
         num_masks (int): The number of words to mask in each sentence.
         sample_size (int): The number of sentences to sample.
+        top_k (int): The number of candidate tokens to replace the [MASK] token 
         device (str): The device to run the masked language model on (e.g., 'cuda' or 'cpu').
 
     Returns:
@@ -55,7 +56,7 @@ def sample_word_replace(range_center, mlm_model, mlm_tokenizer, num_masks, sampl
         )[0]
         for i, mask_index in enumerate(mask_token_index):
             mask_word_logits = predictions[0, mask_index]
-            top_tokens = torch.topk(mask_word_logits, 6, dim=0).indices
+            top_tokens = torch.topk(mask_word_logits, top_k, dim=0).indices
             # Decode tokens to filter out the original word
             decoded_tokens = [mlm_tokenizer.decode([tok_id]) for tok_id in top_tokens]
             filtered_tokens = [
