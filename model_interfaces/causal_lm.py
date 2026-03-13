@@ -19,6 +19,8 @@ class CausalLmModel(BaseModel):
     def loss(self, samples):
         losses = []
 
+        loss_function = torch.nn.CrossEntropyLoss(reduction="none")
+
         for i in tqdm(range(0, len(samples), self.batch_size), desc="Calculating loss"):
             batch = samples[i:i + self.batch_size]
 
@@ -31,7 +33,6 @@ class CausalLmModel(BaseModel):
                 shift_logits = logits[..., :-1, :].contiguous()
                 shift_labels = inputs["input_ids"][..., 1:].contiguous()
 
-                loss_function = torch.nn.CrossEntropyLoss(reduction="none")
                 token_losses = loss_function(
                     shift_logits.view(-1, shift_logits.size(-1)),
                     shift_labels.view(-1)
@@ -54,6 +55,8 @@ class CausalLmModel(BaseModel):
     def per_token_loss(self, samples):
         per_token_losses_list = []
     
+        loss_function = torch.nn.CrossEntropyLoss(reduction="none")
+
         for i in range(0, len(samples), self.batch_size):
             batch = samples[i:i + self.batch_size]
             
@@ -72,7 +75,6 @@ class CausalLmModel(BaseModel):
                 shift_logits = logits[..., :-1, :].contiguous()
                 shift_labels = inputs["input_ids"][..., 1:].contiguous()
                 
-                loss_function = torch.nn.CrossEntropyLoss(reduction="none")
                 token_losses = loss_function(
                     shift_logits.view(-1, shift_logits.size(-1)),
                     shift_labels.view(-1)
