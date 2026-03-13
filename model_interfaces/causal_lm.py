@@ -7,7 +7,7 @@ class CausalLmModel(BaseModel):
     
     def __init__(self, config=None):
         cfg = config or {}
-        self.name = cfg.get("model_id", "gpt2")   # should this have a default? i think not probs
+        self.name = cfg.get("model_id", None)
         device_str = cfg.get("device", "cuda")
         self.device = torch.device(device_str if torch.cuda.is_available() else "cpu")
         self.max_seq_len = cfg.get("max_sequence_length", 512)
