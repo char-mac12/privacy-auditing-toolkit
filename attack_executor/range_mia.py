@@ -49,7 +49,7 @@ class RangeMIA(BaseAttack):
         base_attack_cls = ATTACK_REGISTRY[self.base_attack_id]
         base_attack = base_attack_cls()
 
-        for idx, sample in samples:
+        for idx, sample in enumerate(samples):
             sample_seed = self.seed + idx if self.seed is not None else None
 
             neighbourhood = self._generate_neighbourhood(sample, sample_seed)
@@ -76,7 +76,7 @@ class RangeMIA(BaseAttack):
     
     def _trimmed_average(self, scores):
         """Compute the trimmed mean of neighbour scores to reduce outliers."""
-        
+
         scores = np.array(scores)
         scores = np.sort(scores)
 
