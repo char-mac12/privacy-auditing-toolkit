@@ -24,6 +24,7 @@ class RangeMIA(BaseAttack):
         self.top_k = cfg.get("top_k", 6)
         device_config = cfg.get("device", "cuda")
         self.device = torch.device(device_config if torch.cuda.is_available() else "cpu")
+        self.seed = cfg.get("seed", None)
 
         self.mlm_model = AutoModelForMaskedLM.from_pretrained(self.mask_model).to(self.device)
         self.mlm_tokenizer = AutoTokenizer.from_pretrained(self.mask_model)
@@ -44,8 +45,10 @@ class RangeMIA(BaseAttack):
         base_attack_cls = ATTACK_REGISTRY[self.base_attack_id]
         base_attack = base_attack_cls()
 
-        for sample in samples:
-            neighbourhood = self._generate_neighbourhood(sample)
+        for idx, sample in samples:
+            sample_seed = self.seed + idx if self.seed is not None else None
+
+            neighbourhood = self._generate_neighbourhood(sample, sample_seed)
 
             neighbour_scores = base_attack.score(model, neighbourhood)
             
@@ -54,7 +57,7 @@ class RangeMIA(BaseAttack):
 
         return scores
 
-    def _generate_neighbourhood(self, sample):
+    def _generate_neighbourhood(self, sample, sample_seed):
         return sample_word_replace(
                 sample, 
                 self.mlm_model, 
@@ -62,7 +65,8 @@ class RangeMIA(BaseAttack):
                 self.num_masks, 
                 self.sample_size, 
                 self.top_k,
-                self.device
+                self.device,
+                sample_seed
             )
     
     def _trimmed_average(self, scores):

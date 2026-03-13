@@ -1,7 +1,7 @@
 import random
 import torch
 
-def sample_word_replace(range_center, mlm_model, mlm_tokenizer, num_masks, sample_size, top_k, device):
+def sample_word_replace(range_center, mlm_model, mlm_tokenizer, num_masks, sample_size, top_k, device, seed):
     """
     Sample sentences with word replacements using a masked language model.
 
@@ -17,10 +17,17 @@ def sample_word_replace(range_center, mlm_model, mlm_tokenizer, num_masks, sampl
         sample_size (int): The number of sentences to sample.
         top_k (int): The number of candidate tokens to replace the [MASK] token 
         device (str): The device to run the masked language model on (e.g., 'cuda' or 'cpu').
+        seed (int): Value used to ensure reproducibility of experiments involving randomness
 
     Returns:
         list[str]: Sentences sampled with word replacements.
     """
+    if seed is not None:
+        random.seed(seed)
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed(seed)
+            
     # Mask the input sentence
     attempts = 0
     new_sentences = [range_center]
