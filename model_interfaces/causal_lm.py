@@ -1,7 +1,7 @@
 import torch
 from tqdm import tqdm
 
-from models.base import BaseModel
+from model_interfaces.base import BaseModel
 
 class CausalLmModel(BaseModel):
     

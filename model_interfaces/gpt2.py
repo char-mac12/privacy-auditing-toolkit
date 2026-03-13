@@ -1,7 +1,7 @@
 from pathlib import Path
 from transformers import GPT2LMHeadModel, GPT2TokenizerFast
 
-from models.causal_lm import CausalLmModel
+from model_interfaces.causal_lm import CausalLmModel
 from core.registries import register, MODEL_REGISTRY
 
 @register(MODEL_REGISTRY, "gpt2")

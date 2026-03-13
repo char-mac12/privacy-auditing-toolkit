@@ -1,7 +1,7 @@
 from pathlib import Path
 from transformers import GPTNeoXForCausalLM, AutoTokenizer
 
-from models.causal_lm import CausalLmModel
+from model_interfaces.causal_lm import CausalLmModel
 from core.registries import register, MODEL_REGISTRY
 
 @register(MODEL_REGISTRY, "pythia")
