@@ -9,9 +9,12 @@ from attack_executor.range_sample_word_replace import sample_word_replace
 
 @register(ATTACK_REGISTRY, "range-mia")
 class RangeMIA(BaseAttack):
+    """Membership inference attack based on scores of perturbed neighbour samples."""
+
     display_name = "Range MIA"
 
     def __init__(self, config=None):
+        """Initialise the attack and configure neighbourhood sampling."""
         cfg = config or {}
         log(f"[Attack] {self.display_name} initialised", LogLevel.VERBOSE)
 
@@ -40,6 +43,7 @@ class RangeMIA(BaseAttack):
         self.trim_end = cfg.get("trim_end", 0.9)
         
     def score(self, model, samples):
+        """Score samples using neighbour perturbations and a base attack."""
         scores = []
 
         base_attack_cls = ATTACK_REGISTRY[self.base_attack_id]
@@ -58,6 +62,7 @@ class RangeMIA(BaseAttack):
         return scores
 
     def _generate_neighbourhood(self, sample, sample_seed):
+        """Generate neighbouring samples using masked word replacement."""
         return sample_word_replace(
                 sample, 
                 self.mlm_model, 
@@ -70,6 +75,8 @@ class RangeMIA(BaseAttack):
             )
     
     def _trimmed_average(self, scores):
+        """Compute the trimmed mean of neighbour scores to reduce outliers."""
+        
         scores = np.array(scores)
         scores = np.sort(scores)
 

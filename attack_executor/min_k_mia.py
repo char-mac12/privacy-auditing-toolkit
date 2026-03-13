@@ -6,6 +6,8 @@ from core.logger import log, LogLevel
 
 @register(ATTACK_REGISTRY, "min-k-mia")
 class MinKProbabilityMIA(BaseAttack):
+    """Membership inference attack based on the average log-probability of the lowest K% tokens."""
+    
     display_name = "Min-K% Probability MIA"
     higher_is_member = True
     
@@ -15,6 +17,7 @@ class MinKProbabilityMIA(BaseAttack):
         log(f"Initialising {self.display_name}", LogLevel.VERBOSE)
     
     def score(self, model, samples):
+        """Compute Min-K membership scores from per-token losses for each sample."""
         scores = []
     
         per_token_losses_list = model.per_token_loss(samples)
@@ -25,10 +28,10 @@ class MinKProbabilityMIA(BaseAttack):
                 continue
             
             # p = exp(log_p) = exp(-loss)
-            token_probs = [np.exp(-loss) for loss in token_losses]
+            log_probs = [-loss for loss in token_losses]
             
             # Sort in ascending order (lowest probs first)
-            sorted_probs = sorted(token_probs)
+            sorted_probs = sorted(log_probs)
             
             # Take bottom k%
             k = max(1, int(len(sorted_probs) * self.k_percent / 100))

@@ -4,6 +4,8 @@ from core.logger import log, LogLevel
 
 @register(ATTACK_REGISTRY, "loss-based-mia")
 class LossBasedMIA(BaseAttack):
+    """Membership inference attack using the model loss as the score and membership signal."""
+
     display_name = "Loss-based MIA"
     higher_is_member = False
 
@@ -12,4 +14,5 @@ class LossBasedMIA(BaseAttack):
         log(f"[Attack] Initialising {self.display_name}", LogLevel.VERBOSE)
 
     def score(self, model, samples):
+        """Returns model loss for a sample"""
         return model.loss(samples)

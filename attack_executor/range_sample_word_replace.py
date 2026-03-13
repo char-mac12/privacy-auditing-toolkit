@@ -27,7 +27,7 @@ def sample_word_replace(range_center, mlm_model, mlm_tokenizer, num_masks, sampl
         torch.manual_seed(seed)
         if torch.cuda.is_available():
             torch.cuda.manual_seed(seed)
-            
+
     # Mask the input sentence
     attempts = 0
     new_sentences = [range_center]
@@ -35,7 +35,6 @@ def sample_word_replace(range_center, mlm_model, mlm_tokenizer, num_masks, sampl
     num_words = len(words)
 
     if num_words <= num_masks:
-        # If there are not enough words to mask, return the original text repeated m times
         raise ValueError("Not enough words to mask")
 
     while len(new_sentences) < sample_size:
@@ -57,7 +56,7 @@ def sample_word_replace(range_center, mlm_model, mlm_tokenizer, num_masks, sampl
             outputs = mlm_model(**inputs)
             predictions = outputs.logits
 
-        # Replace '[MASK]' tokens by selecting from the top 6, excluding the original word
+        # Replace '[MASK]' tokens by selecting from the top k (default 6), excluding the original word
         mask_token_index = (inputs.input_ids[0] == mlm_tokenizer.mask_token_id).nonzero(
             as_tuple=True
         )[0]
