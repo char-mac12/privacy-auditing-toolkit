@@ -1,0 +1,23 @@
+{
+  "model": {
+    "id": "llama",
+    "model_id": "meta-llama/Llama-2-7b-hf",
+    "device": "cuda",
+    "max_sequence_length": 512,
+    "batch_size": 4
+  },
+  "dataset": {
+    "id": "wikimia",
+    "dataset_path": "swj0419/WikiMIA",
+    "split": "WikiMIA_length128",
+    "max_member_samples": 200,
+    "max_non_member_samples": 200
+  },
+  "attack": {
+    "id": "loss-based-mia"
+  },
+  "reporter": {
+    "id": "pdf",
+    "output_dir": "reports/pdf"
+  }
+}
