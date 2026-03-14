@@ -4,7 +4,7 @@ from pathlib import Path
 from core.config_loader import ConfigLoader
 from core.audit_runner import AuditRunner
 
-import models
+import model_interfaces
 import dataset_loaders
 import attack_executor
 import metrics_calculator
