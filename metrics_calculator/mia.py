@@ -29,7 +29,7 @@ def _compute_mia_metrics(member_values, non_member_values, higher_is_member=Fals
     recall = recall_score(y_true, y_pred, zero_division=0)
     f1 = f1_score(y_true, y_pred, zero_division=0)
     auc = roc_auc_score(y_true, y_scores)
-    advantage = recall - fpr[best_threshold_index]
+    advantage = tpr[best_threshold_index] - fpr[best_threshold_index]
     
     tpr_at_0_001_percent_fpr = tpr[fpr <= 0.00001][-1] if any(fpr <= 0.00001) else 0.0
     tpr_at_0_1_percent_fpr = tpr[fpr <= 0.001][-1] if any(fpr <= 0.001) else 0.0
