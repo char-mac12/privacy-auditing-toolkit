@@ -22,7 +22,7 @@ class RangeMIA(BaseAttack):
         self.sample_size = cfg.get("sample_size", 10)
 
         # neighbourhood sample config
-        self.num_masks = cfg.get("num_masks", 1)
+        self.num_masks = cfg.get("num_masks", 5)
         self.mask_model = cfg.get("mask_model", "bert-base-uncased")
         self.top_k = cfg.get("top_k", 6)
         device_config = cfg.get("device", "cuda")
@@ -39,8 +39,8 @@ class RangeMIA(BaseAttack):
         self.higher_is_member = base_attack_cls.higher_is_member
 
         # trimmed average config
-        self.trim_start = cfg.get("trim_start", 0.1)
-        self.trim_end = cfg.get("trim_end", 0.9)
+        self.trim_start = cfg.get("trim_start", 0.0)
+        self.trim_end = cfg.get("trim_end", 0.8)
         
     def score(self, model, samples):
         """Score samples using neighbour perturbations and a base attack."""
