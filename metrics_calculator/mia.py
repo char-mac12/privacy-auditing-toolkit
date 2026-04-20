@@ -51,6 +51,7 @@ def _compute_mia_metrics(member_values, non_member_values, higher_is_member=Fals
 @register(METRICS_REGISTRY, "loss-based-mia")
 @register(METRICS_REGISTRY, "min-k-mia")
 @register(METRICS_REGISTRY, "range-mia")
+@register(METRICS_REGISTRY, "default")
 class MIAMetrics(BaseMetrics):    
     def compute(self, attack_output):
         return _compute_mia_metrics(

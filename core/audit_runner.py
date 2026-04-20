@@ -23,9 +23,12 @@ class AuditRunner:
         result = attack.run(model, dataset)
 
         if self.config.attack_id in METRICS_REGISTRY:
-            metric_cls = METRICS_REGISTRY[self.config.attack_id]
-            metrics = metric_cls().compute(result.attack_outputs)
-            result.metrics = metrics
+            metrics_cls = METRICS_REGISTRY[self.config.attack_id]
+        else:
+            metrics_cls = METRICS_REGISTRY["default"]
+
+        metrics = metrics_cls().compute(result.attack_outputs)
+        result.metrics = metrics
 
         reporter_cls = REPORTER_REGISTRY[self.config.reporter_id]
         reporter = reporter_cls(self.config.reporter_config)
