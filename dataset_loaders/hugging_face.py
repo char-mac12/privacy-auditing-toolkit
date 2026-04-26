@@ -1,9 +1,10 @@
 from datasets import load_dataset
 
+from core.registries import register, DATASET_REGISTRY
 from dataset_loaders.base import BaseDataset
 from core.logger import log, LogLevel
 
-
+@register(DATASET_REGISTRY, "hugging-face")
 class HuggingFaceDataset(BaseDataset):
 
     def __init__(self, config):
