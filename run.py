@@ -10,8 +10,8 @@ import attack_executor
 import metrics_calculator
 import report_generator
 
-import attack_executor.loss_based_mia    # this was required but shouldn't be
-import attack_executor.min_k_mia         # this was required but shouldn't be
+import attack_executor.loss_based_mia 
+import attack_executor.min_k_mia         
 import attack_executor.range_mia
 
 
@@ -20,7 +20,7 @@ def main():
     parser.add_argument(
         "--config",
         type=str,
-        default="configs/pythia_160m_pile_cc.json",
+        default="configs/privacy-audit.json",
         help="Path to config JSON file"
     )
     args = parser.parse_args()
