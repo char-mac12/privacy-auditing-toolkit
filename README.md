@@ -75,6 +75,8 @@ privacy-auditing-toolkit/
 └── setup.py                # Package setup
 ```
 
+![Sequence diagram](./assets/toolkit-sequence-diagram.png)
+
 ## Installation
 ```bash
 # Clone repository
