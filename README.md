@@ -75,7 +75,8 @@ privacy-auditing-toolkit/
 └── setup.py                # Package setup
 ```
 
-![Sequence diagram](./assets/toolkit-sequence-diagram.png)
+The figure below demonstrates the flow of interactions between components during an experiment:
+<img src="./assets/toolkit-sequence-diagram.png" alt="Sequence diagram" width="75%">
 
 ## Installation
 ```bash
